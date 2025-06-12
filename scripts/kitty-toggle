@@ -1,0 +1,14 @@
+#!/bin/bash
+
+APP_NAME="kitty"
+
+# Is the app active?
+FRONT_APP=$(osascript -e 'tell application "System Events" to get name of first application process whose frontmost is true')
+
+if [[ "$FRONT_APP" == "$APP_NAME" ]]; then
+  # If the app is active, switch to the previous app using Command+Tab
+  osascript -e 'tell application "System Events" to key code 48 using {command down}'
+else
+  # If the app is not active, open it
+  open -a "$APP_NAME"
+fi
