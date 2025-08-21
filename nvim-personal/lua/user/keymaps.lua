@@ -1,6 +1,6 @@
 -- Comma is my leader.
-vim.g.mapleader = ','
-vim.g.maplocalleader = ','
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
 
 -- When text is wrapped, move by terminal rows, not lines, unless a count is provided.
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true })
@@ -25,9 +25,9 @@ vim.keymap.set('i', ';;', '<Esc>A;')
 vim.keymap.set('i', ',,', '<Esc>A,')
 
 -- Quickly clear search highlighting.
-vim.keymap.set('n', '<Leader><space>', ':nohlsearch<CR>')
+vim.keymap.set('n', '<Leader>k', ':nohlsearch<CR>')
 
--- Open the current file in the default program (on Mc this should just be just `open`).
+-- Open the current file in the default program (on Linux this should just be  `xdg-open`).
 vim.keymap.set('n', '<Leader>x', ':!open %<CR><CR>')
 
 -- Move lines up and down.
@@ -37,3 +37,4 @@ vim.keymap.set('n', '<A-j>', ':move .+1<CR>==')
 vim.keymap.set('n', '<A-k>', ':move .-2<CR>==')
 vim.keymap.set('v', '<A-j>', ":move '>+1<CR>gv=gv")
 vim.keymap.set('v', '<A-k>', ":move '<-2<CR>gv=gv")
+
