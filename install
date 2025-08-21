@@ -17,4 +17,4 @@ rm -rf $HOME/.local/bin/kitty-toggle
 ln -s $DOTFILES/scripts/kitty-toggle $HOME/.local/bin/kitty-toggle
 
 rm -rf $HOME/.config/nvim
-ln -s $DOTFILES/nvim $HOME/.config/nvim
+ln -s $DOTFILES/nvim-personal $HOME/.config/nvim
