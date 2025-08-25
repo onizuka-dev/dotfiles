@@ -46,7 +46,7 @@ return {
     source_selector = {
       winbar = true,
       statusline = false,
-      separator = { left = "", right= "" },
+      --separator = { left = "", right= "" },
       show_separator_on_edge = true,
       highlight_tab = "SidebarTabInactive",
       highlight_tab_active = "SidebarTabActive",
@@ -72,6 +72,7 @@ return {
       },
     },
     window = {
+      position = "right",
       mappings = {
         ["<cr>"] = "open_with_window_picker",
       },
