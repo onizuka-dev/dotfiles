@@ -111,8 +111,9 @@ return {
       },
     })
 
-    -- Load fzf extension with error handling to prevent first-time startup errors
+    -- Load extensions with error handling to prevent first-time startup errors
     pcall(require('telescope').load_extension, 'fzf')
+    pcall(require('telescope').load_extension, 'live_grep_args')
     require('telescope').load_extension('ui-select')
   end,
 }
