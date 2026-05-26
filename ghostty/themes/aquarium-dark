@@ -1,0 +1,26 @@
+# Aquarium Dark — adapted from kitty/Aquarium Dark.conf
+# Original author: Detective Pikachu
+
+background = 20202A
+foreground = C6D0E9
+
+cursor-color = b8dceb
+selection-background = A8B6D0
+selection-foreground = 2E3440
+
+palette = 0=#3b3b4d
+palette = 1=#ebb9b9
+palette = 2=#caf6bb
+palette = 3=#E6DFB8
+palette = 4=#cddbf9
+palette = 5=#f6bbe7
+palette = 6=#b8dceb
+palette = 7=#c8cedc
+palette = 8=#1b1b23
+palette = 9=#d95e59
+palette = 10=#8fc587
+palette = 11=#ffcf85
+palette = 12=#4a83c3
+palette = 13=#bf83b5
+palette = 14=#4eb3cd
+palette = 15=#abb2c2

@@ -1,0 +1,22 @@
+# Leaf Light — adapted from kitty/current-theme.conf
+# Original: qewer33 (Leaf KDE), brought to kitty by KodiakWeb
+
+background = e1e4dc
+foreground = 2e2c2f
+
+palette = 0=#2e2c2f
+palette = 1=#BA5860
+palette = 2=#729B79
+palette = 3=#CCAA6C
+palette = 4=#5292C6
+palette = 5=#8C6AA8
+palette = 6=#489CA5
+palette = 7=#e1e4dc
+palette = 8=#403f42
+palette = 9=#9d4b53
+palette = 10=#59795f
+palette = 11=#a78a58
+palette = 12=#40739a
+palette = 13=#715688
+palette = 14=#3b8187
+palette = 15=#b1b3ad
