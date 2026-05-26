@@ -1,0 +1,25 @@
+# Ghostty configuration — mirror of kitty/kitty.conf
+# See docs/superpowers/specs/2026-05-25-ghostty-config-mirror-kitty-design.md
+
+# Font
+font-family = DankMono Nerd Font
+font-style-bold = Bold
+font-style-italic = Italic
+font-style-bold-italic = Bold Italic
+font-size = 18
+
+# Line height: kitty's adjust_line_height 175% = ghostty's +75% over default
+adjust-cell-height = 75%
+
+# Behavior
+cursor-style-blink = false
+audio-bell-volume = 0
+
+# Window
+macos-titlebar-style = tabs
+macos-option-as-alt = true
+window-padding-x = 10
+window-padding-y = 10
+
+# Theme (switch by editing this line and reloading with Cmd+Shift+,)
+theme = leaf-light
