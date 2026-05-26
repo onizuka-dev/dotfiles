@@ -18,3 +18,9 @@ ln -s $DOTFILES/scripts/kitty-toggle $HOME/.local/bin/kitty-toggle
 
 rm -rf $HOME/.config/nvim
 ln -s $DOTFILES/nvim-personal $HOME/.config/nvim
+
+rm -rf $HOME/.config/ghostty
+ln -s $DOTFILES/ghostty $HOME/.config/ghostty
+
+rm -rf $HOME/.local/bin/ghostty-toggle
+ln -s $DOTFILES/scripts/ghostty-toggle $HOME/.local/bin/ghostty-toggle
