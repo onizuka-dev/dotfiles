@@ -1,45 +1,104 @@
 # 💻dotfiles
-## 👷‍♂️ Installation
-Make these files executable
+
+## 📦 Dependencies
+
+| Package | Needed by | Required |
+|---|---|---|
+| `zsh` | `./install` | yes |
+| `fzf` | `scripts/t` | yes |
+| `tmux` | `scripts/t`, `tmux/tmux.conf` | yes |
+| `wl-clipboard` (Wayland) / `xclip` (X11) | `PREFIX y` in tmux | to copy the tmux buffer |
+| `neovim` | `nvim-personal` | if you use the nvim config |
+| `ripgrep` | telescope's grep pickers | if you use nvim |
+| `gcc`, `make`, `cmake` | treesitter, telescope-fzf-native | if you use nvim |
+| `nodejs`, `npm` | Mason installs the LSP servers | if you use nvim |
+| `lazygit` | `<C-g>` in floaterm | optional |
+| DankMono Nerd Font | `kitty.conf`, `ghostty/config` | for the fonts to render |
+
+On Fedora:
+
 ```
-chmod +x ./scripts/t
-chmod +x ./scripts/open-kitty.sh
+sudo dnf install zsh fzf tmux wl-clipboard neovim ripgrep gcc gcc-c++ make cmake nodejs npm lazygit
 ```
 
-Then install the script:
+## 👷‍♂️ Installation
+
+Make the scripts executable:
+
+```
+chmod +x ./scripts/t ./scripts/kitty-toggle ./scripts/ghostty-toggle
+```
+
+Then install:
+
 ```
 ./install
 ```
 
-## 🔧 Creating a Global Hotkey to Run a Script on macOS (Automator Method)
+On GNOME this also links the `terminal-toggle@cardus` shell extension that the
+toggle scripts depend on. See below.
 
-You can use Automator to assign a **global keyboard shortcut** (like `Ctrl + ;`) to run any script, such as `~/.local/bin/kitty-toggle`. This works system-wide, without needing to open Raycast or any other app.
+## ⌨️ Toggling the terminal with a global hotkey
 
----
+`scripts/kitty-toggle` and `scripts/ghostty-toggle` show the terminal when it is
+hidden and hide it when it is already focused. They detect the platform and take
+one of two paths.
 
-### 🥇 Step 1: Create an Automator Quick Action
+### 🐧 Linux (GNOME Wayland)
+
+GNOME deliberately gives other processes no control over windows: `Eval` is
+disabled, `Shell.Introspect` denies `GetWindows`, and `wmctrl`/`xdotool` do not
+see Wayland-native windows. Ghostty's own quick terminal does not help either —
+it needs the `wlr-layer-shell-v1` protocol, which Mutter does not implement.
+
+So the toggle runs *inside* the shell. `gnome-extension/terminal-toggle@cardus`
+is a small extension that exports one D-Bus method, and the scripts call it.
+
+After running `./install`:
+
+1. **Log out and back in.** GNOME on Wayland cannot pick up a newly added
+   extension without restarting the session — `ReloadExtension` is deprecated
+   and does nothing.
+2. Enable it:
+
+   ```
+   gnome-extensions enable terminal-toggle@cardus
+   ```
+
+3. Point a shortcut at the script in **Settings > Keyboard > Keyboard Shortcuts
+   > Custom Shortcuts**, with the command `kitty-toggle` and whatever key you
+   like, for example `Ctrl + ;`.
+
+To check that the extension is answering:
+
+```
+gdbus call --session --dest org.gnome.Shell \
+  --object-path /org/gnome/Shell/Extensions/TerminalToggle \
+  --method org.gnome.Shell.Extensions.TerminalToggle.Toggle kitty
+```
+
+It replies `minimized`, `activated`, or `none` when no window exists yet, in
+which case the script launches the application.
+
+> The extension pins `"shell-version": ["50"]` in `metadata.json`. Bump it after
+> a GNOME major upgrade, or GNOME will refuse to load it.
+
+### 🍎 macOS (Automator)
+
+Use Automator to assign a global keyboard shortcut to `~/.local/bin/kitty-toggle`.
 
 1. Open **Automator.app**.
-2. Go to **File > New**, then select **Quick Action** (or **Service** on older macOS versions).
-3. At the top of the workflow, configure:
-   - **Workflow receives**: `no input`
-   - **in**: `any application`
-4. In the left panel, search for **Run Shell Script**, then drag it into the workflow area.
+2. **File > New**, then select **Quick Action** (or **Service** on older macOS).
+3. At the top of the workflow, set **Workflow receives** to `no input`, **in**
+   `any application`.
+4. Search for **Run Shell Script** in the left panel and drag it into the
+   workflow.
 5. Replace the script content with:
 
-  ```
-  ~/.local/bin/kitty-toggle
-  ```
+   ```
+   ~/.local/bin/kitty-toggle
+   ```
 
-  ### 🥈 Step 2: Assign the Global Hotkey (`Ctrl + ;`)
-
-1. Open **System Settings** (or **System Preferences**, depending on your macOS version).
-2. Navigate to:
-   **Keyboard > Keyboard Shortcuts > Services** (or **Quick Actions**).
-3. Scroll through the list until you find your newly created Quick Action (e.g., `Toggle Kitty`).
-4. Click on it to add a keyboard shortcut.
-5. Press the keys you want to assign — for example:
-   **`Control + ;`**
-6. Close the settings window. That’s it!
-
-You can now run your script globally with just `Ctrl + ;`, from anywhere in the system.
+6. Open **System Settings > Keyboard > Keyboard Shortcuts > Services** (or
+   **Quick Actions**), find the Quick Action you just created, and assign it a
+   shortcut such as **`Control + ;`**.
