@@ -1,14 +1,56 @@
-#!/bin/bash
+#!/usr/bin/env bash
+#
+# Bring Ghostty to the front, or hide it when it is already focused.
+#
+# macOS can answer "what is focused?" through AppleScript. GNOME on Wayland
+# cannot: Eval is disabled and Shell.Introspect denies GetWindows, so the Linux
+# path goes through the terminal-toggle@cardus shell extension in this repo.
+# ./install links it; enable it once with:
+#
+#   gnome-extensions enable terminal-toggle@cardus
 
-APP_NAME="ghostty"
+set -uo pipefail
 
-# Is the app active?
-FRONT_APP=$(osascript -e 'tell application "System Events" to get name of first application process whose frontmost is true')
+LAUNCH_COMMAND='ghostty'  # used when nothing is running yet
+WINDOW_ID='ghostty'       # matches 'com.mitchellh.ghostty' too
+MACOS_APP_NAME='ghostty'  # application name on macOS
 
-if [[ "$FRONT_APP" == "$APP_NAME" ]]; then
-  # If the app is active, switch to the previous app using Command+Tab
-  osascript -e 'tell application "System Events" to key code 48 using {command down}'
+toggle_macos() {
+    local front
+    front=$(osascript -e 'tell application "System Events" to get name of first application process whose frontmost is true')
+
+    if [[ "$front" == "$MACOS_APP_NAME" ]]; then
+        # Already at the front, so go back to the previous app with Command+Tab
+        osascript -e 'tell application "System Events" to key code 48 using {command down}'
+    else
+        open -a "$MACOS_APP_NAME"
+    fi
+}
+
+toggle_gnome() {
+    local result
+    if ! result=$(gdbus call --session \
+        --dest org.gnome.Shell \
+        --object-path /org/gnome/Shell/Extensions/TerminalToggle \
+        --method org.gnome.Shell.Extensions.TerminalToggle.Toggle \
+        "$WINDOW_ID" 2>&1); then
+        echo "${0##*/}: terminal-toggle@cardus is not responding." >&2
+        echo "${0##*/}: enable it with 'gnome-extensions enable terminal-toggle@cardus'." >&2
+        return 1
+    fi
+
+    # 'none' means there is no window to show, so start one. setsid detaches it
+    # from this script, which the shortcut kills as soon as it returns.
+    if [[ "$result" == *"'none'"* ]]; then
+        setsid "$LAUNCH_COMMAND" >/dev/null 2>&1 &
+    fi
+}
+
+if command -v osascript >/dev/null 2>&1; then
+    toggle_macos
+elif [[ "${XDG_CURRENT_DESKTOP:-}" == *GNOME* ]]; then
+    toggle_gnome
 else
-  # If the app is not active, open it
-  open -a "$APP_NAME"
+    echo "${0##*/}: unsupported session, expected macOS or GNOME." >&2
+    exit 1
 fi
