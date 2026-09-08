@@ -24,3 +24,16 @@ ln -s $DOTFILES/ghostty $HOME/.config/ghostty
 
 rm -rf $HOME/.local/bin/ghostty-toggle
 ln -s $DOTFILES/scripts/ghostty-toggle $HOME/.local/bin/ghostty-toggle
+
+# The toggle scripts need this extension to see and move windows on GNOME
+# Wayland. macOS uses AppleScript instead, so only link it where it applies.
+if [[ $XDG_CURRENT_DESKTOP == *GNOME* ]]; then
+  EXTENSIONS=$HOME/.local/share/gnome-shell/extensions
+  mkdir -p $EXTENSIONS
+
+  rm -rf $EXTENSIONS/terminal-toggle@cardus
+  ln -s $DOTFILES/gnome-extension/terminal-toggle@cardus $EXTENSIONS/terminal-toggle@cardus
+
+  echo "Linked terminal-toggle@cardus. Log out and back in, then run:"
+  echo "  gnome-extensions enable terminal-toggle@cardus"
+fi
