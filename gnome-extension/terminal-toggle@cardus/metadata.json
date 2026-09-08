@@ -1,0 +1,9 @@
+{
+  "name": "Terminal Toggle",
+  "description": "Exposes a D-Bus method that shows or hides a window by application name. GNOME on Wayland offers no external window control, so a global shortcut needs this to toggle a terminal.",
+  "uuid": "terminal-toggle@cardus",
+  "shell-version": [
+    "50"
+  ],
+  "url": "https://github.com/onizuka-dev/dotfiles"
+}
