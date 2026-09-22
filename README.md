@@ -7,6 +7,8 @@
 | `zsh` | `./install` | yes |
 | `fzf` | `scripts/t` | yes |
 | `tmux` | `scripts/t`, `tmux/tmux.conf` | yes |
+| `herdr` | `herdr/config.toml` | to try Herdr instead of tmux |
+| `jq` | `scripts/t` inside Herdr | with Herdr |
 | `wl-clipboard` (Wayland) / `xclip` (X11) | `PREFIX y` in tmux | to copy the tmux buffer |
 | `neovim` | `nvim-personal` | if you use the nvim config |
 | `ripgrep` | telescope's grep pickers | if you use nvim |
@@ -18,7 +20,7 @@
 On Fedora:
 
 ```
-sudo dnf install zsh fzf tmux wl-clipboard neovim ripgrep gcc gcc-c++ make cmake nodejs npm lazygit
+sudo dnf install zsh fzf tmux jq wl-clipboard neovim ripgrep gcc gcc-c++ make cmake nodejs npm lazygit
 ```
 
 ## 👷‍♂️ Installation
@@ -37,6 +39,26 @@ Then install:
 
 On GNOME this also links the `terminal-toggle@cardus` shell extension that the
 toggle scripts depend on. See below.
+
+## 🐑 Herdr
+
+`herdr/config.toml` maps the tmux bindings onto [Herdr](https://herdr.dev), a
+tmux-like multiplexer that knows which panes run coding agents and what state
+they are in. The same prefix, the same keys, and `t` opens projects as Herdr
+workspaces. Both can live side by side; `t` and the nvim navigation detect
+which one they run in. The end of the config lists what has no Herdr
+equivalent.
+
+Install Herdr, then the Herdr half of the nvim navigation (it compiles a small
+C binary, so it needs `gcc`):
+
+```
+curl -fsSL https://herdr.dev/install.sh | sh
+herdr plugin install aimdevlee/herdr-nvim-nav
+```
+
+Run `herdr`. After editing the config, `herdr config check` validates it (bad
+key names only, not two actions on one key) and `PREFIX r` reloads it.
 
 ## ⌨️ Toggling the terminal with a global hotkey
 

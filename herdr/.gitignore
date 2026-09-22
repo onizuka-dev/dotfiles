@@ -1,0 +1,5 @@
+# Herdr keeps its runtime state next to the config: logs, session.json,
+# the socket, installed plugins. Only the config belongs in the repo.
+*
+!.gitignore
+!config.toml

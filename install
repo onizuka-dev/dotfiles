@@ -8,6 +8,12 @@ ln -s $DOTFILES/kitty $HOME/.config/kitty
 rm -rf $HOME/.tmux.conf
 ln -s $DOTFILES/tmux/tmux.conf $HOME/.tmux.conf
 
+# The whole directory, not just config.toml: Herdr may rewrite config.toml in
+# place of a symlink. Its runtime files land here too; herdr/.gitignore
+# keeps them out of the repo.
+rm -rf $HOME/.config/herdr
+ln -s $DOTFILES/herdr $HOME/.config/herdr
+
 mkdir -p $HOME/.local/bin
 
 rm -rf $HOME/.local/bin/t

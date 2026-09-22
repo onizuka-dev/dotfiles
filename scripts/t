@@ -9,7 +9,23 @@ else
     selected=`echo "$items" | fzf`
 fi
 
+[[ -z $selected ]] && exit 0
+
 dirname=`basename $selected | sed 's/\./_/g'`
+
+# Inside Herdr a project is a workspace, not a session. Herdr hands its
+# socket to popups and custom commands, and to every pane it starts.
+if [[ -n $HERDR_SOCKET_PATH || -n $HERDR_ENV ]]; then
+    herdr=${HERDR_BIN_PATH:-herdr}
+    id=`$herdr workspace list | jq -r --arg label "$dirname" \
+        'first(.result.workspaces[] | select(.label == $label) | .workspace_id) // empty'`
+    if [[ -n $id ]]; then
+        $herdr workspace focus "$id" >/dev/null
+    else
+        $herdr workspace create --cwd "$selected" --label "$dirname" --focus >/dev/null
+    fi
+    exit
+fi
 
 tmux switch-client -t =$dirname
 if [[ $? -eq 0 ]]; then

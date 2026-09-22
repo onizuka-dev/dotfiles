@@ -1,0 +1,111 @@
+# Herdr, configured to feel like tmux/tmux.conf.
+#
+# Every [keys] entry below mirrors a tmux binding. What tmux has and Herdr
+# does not is listed at the end, so nobody goes looking for it here.
+#
+# Full default config: `herdr --default-config`. Validate: `herdr config check`
+# (it catches bad key names, NOT two actions on the same key). Reload a
+# running server: PREFIX r.
+
+# Skip the first-run setup. Herdr writes this line itself otherwise, which
+# would dirty the dotfiles repo on every fresh machine.
+onboarding = false
+
+[terminal]
+# New panes, tabs and workspaces start in the directory of the pane they
+# came from, like tmux's `-c "#{pane_current_path}"`. This is the default;
+# it is spelled out because the tmux config relied on it.
+new_cwd = "follow"
+
+[keys]
+# tmux: set -g prefix C-Space
+prefix = "ctrl+space"
+
+# tmux: bind r source-file ~/.tmux.conf
+# Herdr has r on resize mode by default; resize mode takes shift+r, which
+# reload_config gives up.
+reload_config = "prefix+r"
+resize_mode = "prefix+shift+r"
+
+# tmux: n/p and C-n/C-p for next/previous window, C-h/C-l as well.
+# Herdr has no repeat (-r); keep the prefix per step.
+next_tab = ["prefix+n", "prefix+ctrl+n", "prefix+ctrl+l"]
+previous_tab = ["prefix+p", "prefix+ctrl+p", "prefix+ctrl+h"]
+
+# tmux: N/P swap the window with the next/previous one.
+move_tab_next = "prefix+shift+n"
+move_tab_previous = "prefix+shift+p"
+# ...which were Herdr's new workspace and rename pane. New workspaces come
+# from PREFIX F (the `t` picker); both stay on the right-click menu.
+new_workspace = ""
+rename_pane = ""
+
+# tmux: bind Space last-window. Herdr has no "last tab"; last_pane jumps back
+# to the previously focused pane, even across tabs and workspaces, which is
+# the same back-and-forth in practice.
+last_pane = "prefix+space"
+
+# tmux: | splits side by side, - stacks. Herdr names them by the divider.
+split_vertical = "prefix+|"
+split_horizontal = "prefix+minus"
+
+# tmux: PREFIX h/j/k/l moves between panes. Already Herdr's default:
+# focus_pane_left/down/up/right = prefix+h/j/k/l.
+
+# tmux: bind -r F new-window t, and D runs `t ~/Code/dotfiles`.
+# D was Herdr's close workspace; that moves to ctrl+d.
+close_workspace = "prefix+ctrl+d"
+
+[[keys.command]]
+key = "prefix+shift+f"
+type = "popup"
+command = "t"
+description = "open a project (t)"
+width = "80%"
+height = "60%"
+
+[[keys.command]]
+key = "prefix+shift+d"
+type = "shell"
+command = "t ~/Code/dotfiles"
+description = "open the dotfiles"
+
+# tmux: vim-tmux-navigator's C-h/j/k/l, aware of nvim splits.
+# Needs the Herdr half of aimdevlee/herdr-nvim-nav (see README) and the
+# nvim half in nvim-personal/lua/user/plugins/herdr-nvim-nav.lua.
+[[keys.command]]
+key = "ctrl+h"
+type = "plugin_action"
+command = "herdr-nvim-nav.left"
+
+[[keys.command]]
+key = "ctrl+j"
+type = "plugin_action"
+command = "herdr-nvim-nav.down"
+
+[[keys.command]]
+key = "ctrl+k"
+type = "plugin_action"
+command = "herdr-nvim-nav.up"
+
+[[keys.command]]
+key = "ctrl+l"
+type = "plugin_action"
+command = "herdr-nvim-nav.right"
+
+# Already the same as tmux, nothing to set:
+# - Copy mode is PREFIX [ with vi keys: v or Space selects, y copies, / searches.
+#   Mouse selection copies straight away (ui.copy_on_select).
+# - Mouse, window title, 1-based tab numbers.
+# - Scrollback: 10 MB per pane (advanced.scrollback_limit_bytes), well past
+#   tmux's 10000 lines.
+#
+# No Herdr equivalent:
+# - PREFIX ^ (switch-client -l): no "last workspace", only next/previous in order.
+# - bind -r repeat: Herdr uses modes instead (PREFIX shift+r to resize,
+#   PREFIX w opens navigate mode, where bare h/j/k/l move between panes).
+# - send-prefix for nested sessions, escape-time, terminal-overrides for
+#   undercurl, detach-on-destroy: Herdr draws the terminal itself and has no
+#   such options.
+# - PREFIX y (copy buffer to the clipboard): there is no separate buffer;
+#   y in copy mode already copies to the clipboard.
