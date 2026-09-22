@@ -46,8 +46,9 @@ rename_pane = ""
 last_pane = "prefix+space"
 
 # tmux: | splits side by side, - stacks. Herdr names them by the divider.
-split_vertical = "prefix+|"
-split_horizontal = "prefix+minus"
+# % and " are tmux's own defaults for the same splits.
+split_vertical = ["prefix+|", "prefix+%"]
+split_horizontal = ["prefix+minus", 'prefix+"']
 
 # tmux: PREFIX h/j/k/l moves between panes. Already Herdr's default:
 # focus_pane_left/down/up/right = prefix+h/j/k/l.
