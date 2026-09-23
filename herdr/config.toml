@@ -17,6 +17,16 @@ onboarding = false
 # it is spelled out because the tmux config relied on it.
 new_cwd = "follow"
 
+[ui]
+# No frames around panes, inside or out. The border is also what marks the
+# focused pane, so that highlight goes with it.
+pane_borders = "off"
+pane_outer_borders = false
+
+# PREFIX b hides the sidebar entirely instead of leaving the narrow status
+# rail behind.
+sidebar_collapsed_mode = "hidden"
+
 [keys]
 # tmux: set -g prefix C-Space
 prefix = "ctrl+space"
@@ -40,10 +50,21 @@ move_tab_previous = "prefix+shift+p"
 new_workspace = ""
 rename_pane = ""
 
+# tmux: sessions map to workspaces. Jump by number (shift+1..9, like
+# switch-client -t) or step through them in sidebar order.
+switch_workspace = "prefix+shift+1..9"
+next_workspace = "prefix+ctrl+j"
+previous_workspace = "prefix+ctrl+k"
+
+# tmux: L (switch-client -l, back to the last session). Herdr has no "last
+# workspace"; last_pane crosses workspaces, so from a fresh jump it lands on
+# the one you came from. After moving between panes inside a workspace it
+# returns to that pane instead.
+
 # tmux: bind Space last-window. Herdr has no "last tab"; last_pane jumps back
 # to the previously focused pane, even across tabs and workspaces, which is
 # the same back-and-forth in practice.
-last_pane = "prefix+space"
+last_pane = ["prefix+space", "prefix+shift+l"]
 
 # tmux: | splits side by side, - stacks. Herdr names them by the divider.
 # % and " are tmux's own defaults for the same splits.
@@ -102,7 +123,8 @@ command = "herdr-nvim-nav.right"
 #   tmux's 10000 lines.
 #
 # No Herdr equivalent:
-# - PREFIX ^ (switch-client -l): no "last workspace", only next/previous in order.
+# - PREFIX ^ (switch-client -l): no "last workspace"; PREFIX L uses last_pane,
+#   see above.
 # - bind -r repeat: Herdr uses modes instead (PREFIX shift+r to resize,
 #   PREFIX w opens navigate mode, where bare h/j/k/l move between panes).
 # - send-prefix for nested sessions, escape-time, terminal-overrides for
